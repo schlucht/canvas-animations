@@ -1,0 +1,23 @@
+{
+  "name": "canvas-animations",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev" :  "parcel index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schlucht/canvas-animations.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/schlucht/canvas-animations/issues"
+  },
+  "homepage": "https://github.com/schlucht/canvas-animations#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
+  }
+}

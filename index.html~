@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>Ball</title>
+  </head>
+<style>
+  body {
+    margin: 0;
+      padding: 0;
+  }
+</style>
+  <body>
+    <canvas></canvas>
+  </body>
+</html>
