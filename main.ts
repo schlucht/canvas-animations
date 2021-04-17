@@ -59,13 +59,24 @@ canvas.addEventListener('mousemove', (event: MouseEvent) => {
 // }
 // initParticle()
 function handleParicle() {
-    particleArray.forEach((part: Particle, index: number) => {
-        part.update()
-        part.draw()
-        if ( part.Size < .3) {
-            particleArray.splice(index, 1)
+    for (let i = 0; i < particleArray.length; i++) {
+        particleArray[i].update()
+        particleArray[i].draw()
+        for (let j = i; j < particleArray.length; j++) {
+            // ENtfernung X vom Punkt eins zu dem Punkt 2 90° Winkel zum 
+            // zweiten Punkt
+            const dx = particleArray[i].MousePoint.X - particleArray[j].MousePoint.X
+
+            // ENtfernung y vom Punkt eins zu dem Punkt 2 90° Winkel zum 
+            // zweiten Punkt
+            const dy = particleArray[i].MousePoint.Y - particleArray[j].MousePoint.Y
+            const distance = Math.sqrt(dx * dx + dy * dy)
         }
-    })
+        if(particleArray[i].Size < .3) {
+            particleArray.slice(i, 1)
+            i--
+        }
+    }
 }
 function animation() {
     ctx.clearRect(0, 0, innerWidth, innerHeight)
