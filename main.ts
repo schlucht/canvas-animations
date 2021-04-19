@@ -3,24 +3,22 @@ import { Particle } from './src/particle'
 const canvas = document.getElementById('canvas1')! as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
 const particleArray: Particle[] = []
-const mouse: Point = new Point(undefined,undefined)
+const mouse: Point = new Point(undefined, undefined)
 const colors = ['red', 'blue', 'green', 'gray']
 let hue = 0
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 
-
 window.addEventListener('resize', () => {
     ctx.canvas.width = window.innerWidth
     ctx.canvas.height = window.innerHeight
-
 })
 canvas.addEventListener('click', (event: MouseEvent) => {
     mouse.Y = event.y
     mouse.X = event.x
-    let p: Particle;
+    let p: Particle
     let pt: Point
-    for (let i = 0; i < 10; i++){
+    for (let i = 0; i < 10; i++) {
         pt = new Point(mouse.X, mouse.Y)
         p = new Particle(ctx, pt)
         p.Color = colors[Math.ceil(Math.random() * colors.length)]
@@ -30,12 +28,12 @@ canvas.addEventListener('click', (event: MouseEvent) => {
         particleArray.push(p)
     }
 })
-canvas.addEventListener('mousemove', (event: MouseEvent) => {    
+canvas.addEventListener('mousemove', (event: MouseEvent) => {
     mouse.Y = event.y
     mouse.X = event.x
-    let p: Particle;
+    let p: Particle
     let pt: Point
-    for (let i = 0; i < 5; i++){
+    for (let i = 0; i < 5; i++) {
         pt = new Point(mouse.X, mouse.Y)
         p = new Particle(ctx, pt)
         p.Color = `hsl(${hue}, 100%, 50%)`
@@ -48,7 +46,7 @@ canvas.addEventListener('mousemove', (event: MouseEvent) => {
 
 // function initParticle() {
 //     let p: Particle;
-//     for (let i = 0; i < 100; i++) {        
+//     for (let i = 0; i < 100; i++) {
 //         p = new Particle(ctx, mouse)
 //         p.Color = 'blue'
 //         p.Size = Math.random() * 15 + 1
@@ -58,22 +56,38 @@ canvas.addEventListener('mousemove', (event: MouseEvent) => {
 //     }
 // }
 // initParticle()
-function handleParicle() {
+function handleParicles() {
     for (let i = 0; i < particleArray.length; i++) {
         particleArray[i].update()
         particleArray[i].draw()
         for (let j = i; j < particleArray.length; j++) {
-            // ENtfernung X vom Punkt eins zu dem Punkt 2 90° Winkel zum 
+            // Entfernung X vom Punkt eins zu dem Punkt 2 90° Winkel zum
             // zweiten Punkt
-            const dx = particleArray[i].MousePoint.X - particleArray[j].MousePoint.X
+            const dx =
+                particleArray[i].MousePoint.X - particleArray[j].MousePoint.X
 
-            // ENtfernung y vom Punkt eins zu dem Punkt 2 90° Winkel zum 
+            // ENtfernung y vom Punkt eins zu dem Punkt 2 90° Winkel zum
             // zweiten Punkt
-            const dy = particleArray[i].MousePoint.Y - particleArray[j].MousePoint.Y
+            const dy =
+                particleArray[i].MousePoint.Y - particleArray[j].MousePoint.Y
             const distance = Math.sqrt(dx * dx + dy * dy)
+            if (distance < 100) {
+                ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`
+                ctx.beginPath()
+                ctx.lineWidth = 0.2
+                ctx.moveTo(
+                    particleArray[i].MousePoint.X,
+                    particleArray[i].MousePoint.Y
+                )
+                ctx.lineTo(
+                    particleArray[j].MousePoint.X,
+                    particleArray[j].MousePoint.Y
+                )
+                ctx.stroke()
+            }
         }
-        if(particleArray[i].Size < .3) {
-            particleArray.slice(i, 1)
+        if (particleArray[i].Size < 0.3) {
+            particleArray.splice(i, 1)
             i--
         }
     }
@@ -82,10 +96,9 @@ function animation() {
     ctx.clearRect(0, 0, innerWidth, innerHeight)
     // ctx.fillStyle = 'rgba(0,0,0,.02)'
     // ctx.fillRect(0, 0, canvas.width, canvas.height)
-    handleParicle()
-    hue+=2
+    handleParicles()
+    hue += 2
     window.requestAnimationFrame(animation)
-    
 }
 
 animation()
