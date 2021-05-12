@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "dev-game": "parcel birdgame/index.html",
-        "dev-particle": "parcel index.html"
+        "dev-particle": "parcel index.html",
+        "dev-api": "parcel canvas/index.html"
     },
     "repository": {
         "type": "git",
