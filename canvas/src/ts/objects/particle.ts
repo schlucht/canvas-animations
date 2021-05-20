@@ -1,11 +1,12 @@
-import { Point } from './point'
+import { IPoint, ISize, Point } from "../basis";
+import { PI, PI2 } from '../utilities'
 
 export class Particle {
-    public _point: Point
-    public get MousePoint(): Point {        
+    public _point: IPoint
+    public get MousePoint():IPoint {        
         return this._point
     }
-    public set MousePoint(value: Point | undefined | null) {
+    public set MousePoint(value: IPoint | undefined | null) {
         if (value === undefined || value === null) {
             this._point = new Point(0, 0)
         } else {
@@ -63,12 +64,12 @@ export class Particle {
     draw() {
         this.ctx.fillStyle = this.Color
         this.ctx.beginPath()
-        this.ctx.arc(this.MousePoint.X, this.MousePoint.Y, this.Size, 0, Math.PI * 2)
+        this.ctx.arc(this.MousePoint.x, this.MousePoint.y, this.Size, 0, PI2)
         this.ctx.fill()
     }
     update() {
-        this.MousePoint.X += this.SpeedX
-        this.MousePoint.Y += this.SpeedY
+        this.MousePoint.x += this.SpeedX
+        this.MousePoint.y += this.SpeedY
         if (this.Size > 0.2) this.Size -= .1
     }
 }
