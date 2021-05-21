@@ -1,5 +1,12 @@
-import { IPoint } from "./ipoint"
-
+export interface IPoint {
+    x: number
+    y: number
+    add(p: IPoint): IPoint
+    sub(p: IPoint): IPoint
+    mulpli(faktor: number): IPoint
+    divi(faktor: number): IPoint
+    diff(p: IPoint): number
+}
 export class Point implements IPoint {
     constructor(public x: number, public y: number) {
     }

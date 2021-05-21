@@ -2,11 +2,9 @@
     "name": "canvas-animations",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "main.js",
     "scripts": {
-        "dev-game": "parcel birdgame/index.html",
-        "dev-particle": "parcel index.html",
-        "dev-api": "parcel canvas/index.html"
+        "start": "parcel src/index.html"
     },
     "repository": {
         "type": "git",

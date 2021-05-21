@@ -1,5 +1,5 @@
-import { IPoint } from "../basis/ipoint";
-import { ISize } from "../basis/isize";
+import { IPoint, ISize } from "../basis";
+
 
 export class Rect {
     constructor(private ctx: CanvasRenderingContext2D, 
