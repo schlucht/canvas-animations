@@ -23,6 +23,9 @@ const clickTimer = document.getElementById('clickTimer');
 const newSort = document.getElementById('newSort');
 const resolve = document.getElementById('resolve');
 const mix = document.getElementById('newMix');
+const dataList = document.getElementById('scoreList')
+const closeList = document.getElementById('closeScoreList')
+const ranking = document.getElementById('ranking')
 
 let timerRef;
 function clTimer() {
@@ -217,4 +220,11 @@ resolve.addEventListener('click', (e) => {
 });
 mix.addEventListener('click', (e) => {
   readRecs(randomNr())
+})
+
+closeList.addEventListener('click', () => {
+  dataList.style.display = 'none'
+})
+ranking.addEventListener('click', (e) => {
+  dataList.style.display = 'flex'
 })
