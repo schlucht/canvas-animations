@@ -3,14 +3,14 @@
 const CV = document.querySelector('#canvas1');
 const CTX = CV.getContext('2d');
 const DISPLAY  = 400;
-const CV_RECT = CV.getBoundingClientRect();
+
 const COUNT = 4; // Anzahl Zeilen und Spalten
 const COUNTSTONES = COUNT * COUNT
 const STONE_SIZE = DISPLAY / COUNT
 
 CTX.canvas.height = DISPLAY
 CTX.canvas.width = DISPLAY
-
+const CV_RECT = CV.getBoundingClientRect();
 // Statistik Konstanten
 let startTimer = true;
 let clicks = 0;
@@ -22,6 +22,7 @@ const newPlay = document.getElementById('newPlay');
 const clickTimer = document.getElementById('clickTimer');
 const newSort = document.getElementById('newSort');
 const resolve = document.getElementById('resolve');
+const mix = document.getElementById('newMix');
 
 let timerRef;
 function clTimer() {
@@ -58,12 +59,17 @@ class Rectangle {
     CTX.fillText(this.nr, this.x + this.w / 2, this.y + this.h / 2 + (this.fontSize / 2));
   } 
 }
-// Zufälliges Array erstellen mit Zahlen zwischen 1 und Anzahl Steine
-function randomNr() {
+
+function createNummers() {
   const arrNr = [];  
   for (let i = 0; i < COUNTSTONES; i++) {
     arrNr.push(i + 1)
   }
+  return arrNr
+}
+// Zufälliges Array erstellen mit Zahlen zwischen 1 und Anzahl Steine
+function randomNr() {
+  const arrNr = createNummers()
   const ar = [];
   while (arrNr.length > 0) {
     let ri = Math.floor(Math.random() * arrNr.length);
@@ -74,54 +80,64 @@ function randomNr() {
 }
 // Steine erstellen
 let stones = [];
+let currentStones = [];
 function readRecs(arrStones) {
-  let nums = arrStones; 
+  stones = []
+  let nummers = arrStones; 
   let x = 0;
   let y = 0;
-  let clr = 'red';
-  let fclr = 'gold'
+  let color = 'red';
+  let fcolor = 'gold'
   let nr = 0;  
   let stone = null
 
-  for (let i = 0; i < nums.length; i++) {
-    nr = nums[i];
+  for (let i = 0; i < nummers.length; i++) {
+    nr = nummers[i];
     let mod = i % COUNT;
     x = mod * STONE_SIZE;    
     if (mod === 0) {
       x = 0;
       y += STONE_SIZE;
     }
-    clr = nums[i] % 2 === 0 ? 'red' : 'white';
+    color = nummers[i] % 2 === 0 ? 'red' : 'white';
     if (nr === 16) {
-      clr = 'black';
-      fclr = 'black'
+      color = 'black';
+      fcolor = 'black'
     } else {
-      fclr = 'gold'
+      fcolor = 'gold'
     }
     stone = new Rectangle(
       x,
       y - STONE_SIZE,
       STONE_SIZE,
       STONE_SIZE,
-      clr,
+      color,
       nr,
       i,
-      fclr
+      fcolor
     ) 
-    stones.push(stone);
+    stones.push(stone);    
   }
+  drawStones(stones)
+  currentStones = copyStones(stones)  
+  
 }
 
-// Steine zeichnen
-function readAllRect(arrStones) {
-  CTX.clearRect(0, 0, DISPLAY, DISPLAY);
-  readRecs(arrStones); 
-  stones.forEach((r) => {
+// // Steine zeichnen
+function drawStones(arrStones) {
+  CTX.clearRect(0, 0, DISPLAY, DISPLAY); 
+  arrStones.forEach((r) => {
     r.draw()
   });
 }
 
-
+function copyStones(arrStones) {
+  const newArr = []  
+  for (let stone of arrStones) {     
+    newArr.push(new Rectangle(stone.x, stone.y, stone.w, stone.h, stone.color, stone.nr, stone.pos, stone.fontColor))
+  }
+  return newArr
+}
 
 function clearDisplay() {
   clicks = 0;
@@ -130,10 +146,9 @@ function clearDisplay() {
   recs = [];
   startTimer = false;
   clearTimeout(timerRef);
-  clickTimer.innerText = '0 s';
-  readAllRect();
-  animate(stones);
+  clickTimer.innerText = '0 s';  
 }
+
 function kiResolve() {
   clearDisplay();
   let i = 0;
@@ -150,10 +165,16 @@ function playCheck(arrStones) {
   alert('bravo')
 }
 // Spiel ablauf
-readAllRect(randomNr());
-CV.addEventListener('mousedown', (e) => {
+readRecs(randomNr());
+window.addEventListener('resize', () => {  
+  CTX.canvas.width = DISPLAY
+  CTX.canvas.height = DISPLAY
+})
+CV.addEventListener('click', (e) => {
+  
   const mx = e.clientX - CV_RECT.left;
-  const my = e.clientY - CV_RECT.top;
+  const my = e.clientY - CV_RECT.top;  
+  
   if (startTimer) {
     startTimer = false;
     clTimer();
@@ -164,37 +185,36 @@ CV.addEventListener('mousedown', (e) => {
   });
 
   const posActive = nStones.find((f) => {
-    return mx - 100 < f.x && my - 100 < f.y;
+    return mx - STONE_SIZE < f.x && my - STONE_SIZE < f.y;
   });
 
   let pF = posFree.pos;
   let pA = posActive.pos;
-  if (pA + 1 === pF || pA - 1 === pF || pA - 4 === pF || pA + 4 === pF) {
-    clicks++;
+ 
+  if (pA + 1 === pF || pA - 1 === pF || pA - 4 === pF || pA + 4 === pF) {   
+    clicks++;   
     stones[pA].nr = nStones[pF].nr;
     stones[pA].color = nStones[pF].color;
     stones[pA].fontColor = nStones[pF].fontColor;
     stones[pF].nr = nStones[pA].nr;
     stones[pF].color = nStones[pA].color;
     stones[pF].fontColor = nStones[pA].fontColor;
-  }
+    drawStones(stones)
+  }  
 
-
-  playCheck(stones)
   counter.innerText = clicks;
 });
 
 newPlay.addEventListener('click', (e) => {
-  clearDisplay();
+  stones = copyStones(currentStones)
+  drawStones(stones)
 });
 newSort.addEventListener('click', (e) => {
-  sort = true;
-  clearDisplay();
-  sort = false;
-
-  playCheck(stones)
+ readRecs(createNummers())
 });
-resolve.addEventListener('click', (e) => {
-  kiResolve();
+resolve.addEventListener('click', (e) => {  
+    
 });
-
+mix.addEventListener('click', (e) => {
+  readRecs(randomNr())
+})
