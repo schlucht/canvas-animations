@@ -7,14 +7,13 @@ html {
 }
 body {
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-image: linear-gradient( #999, #ccc);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-image: linear-gradient(#999, #ccc);
+  height: 100vh;
 }
 header {
-  /*position: relative;*/
   height: 110px;
   width: 80%;
   background-color: #ccc;
@@ -60,7 +59,7 @@ header h1 {
 }
 .btn {
   font-size: 1.3rem;
-  padding: .5rem;
+  padding: 0.5rem;
   cursor: pointer;
   width: 150px;
   height: 60px;
@@ -70,9 +69,10 @@ header h1 {
   display: flex;
   width: 40%;
   justify-content: space-between;
-  margin: .8rem;
+  margin: 0.8rem;
 }
-.score__label, .score__data{
+.score__label,
+.score__data {
   font-size: 1.2rem;
   font-weight: 600;
 }
