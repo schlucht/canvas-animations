@@ -1,6 +1,5 @@
 import { Point } from "./basis/point"
 import { Size } from "./basis/size"
-import { Rect } from "./geometries.ts/rect"
 import { Canvas } from './canvas/canvas';
 
 const cv = document.querySelector('canvas')
