@@ -1,3 +1,6 @@
+import { Stone, Rectangle } from './object/object.js'
+import { createNumbers, randomNr} from './utilities.js'
+
 
 // Spiel Konstanten
 const CV = document.querySelector('#canvas1');
@@ -14,7 +17,7 @@ const CV_RECT = CV.getBoundingClientRect();
 // Statistik Konstanten
 let startTimer = true;
 let clicks = 0;
-let sort = false;
+let playPause = false
 const counter = document.getElementById('clickCount');
 counter.innerText = clicks;
 
@@ -26,200 +29,201 @@ const mix = document.getElementById('newMix');
 const dataList = document.getElementById('scoreList')
 const closeList = document.getElementById('closeScoreList')
 const ranking = document.getElementById('ranking')
+const pause = document.getElementById('pause')
+const info = document.querySelector('.info')
 
 let timerRef;
+let seconds = 0;
 function clTimer() {
-  let s = 0;
   timerRef = setInterval(() => {
-    clickTimer.innerText = `${s} s`;
-    s++;
+    clickTimer.innerText = `${seconds} s`;
+    seconds++;
   }, 1000);
 }
-
-class Rectangle {
-  constructor(x, y, w, h, color, nr, pos, fColor = 'gold') {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.color = color;
-    this.nr = nr;
-    this.pos = pos;
-    this.fontColor = fColor
-    this.line = 2
-    this.fontSize = Math.floor(this.w / 3)
-  }
-  draw() {
-    CTX.fillStyle = this.color;
-    CTX.strokeStyle = '#cccccc';
-    CTX.lineWidth = this.line
-    CTX.fillRect(this.x + this.line, this.y + this.line, this.w - this.line, this.h - this.line);
-    CTX.strokeRect(this.x + this.line, this.y + this.line, this.w - this.line, this.h - this.line);
-    CTX.beginPath();    
-    CTX.font = `${this.fontSize}px Arial`;   
-    CTX.fillStyle = this.fontColor;
-    CTX.textAlign = 'center';
-    CTX.fillText(this.nr, this.x + this.w / 2, this.y + this.h / 2 + (this.fontSize / 2));
-  } 
+function stopTimer() {
+  clearInterval(timerRef)
 }
 
-function createNummers() {
-  const arrNr = [];  
-  for (let i = 0; i < COUNTSTONES; i++) {
-    arrNr.push(i + 1)
-  }
-  return arrNr
-}
-// Zufälliges Array erstellen mit Zahlen zwischen 1 und Anzahl Steine
-function randomNr() {
-  const arrNr = createNummers()
-  const ar = [];
-  while (arrNr.length > 0) {
-    let ri = Math.floor(Math.random() * arrNr.length);
-    ar.push(arrNr[ri]);
-    arrNr.splice(ri, 1);
-  }
-  return ar;
-}
+
+
 // Steine erstellen
-let stones = [];
-let currentStones = [];
-function readRecs(arrStones) {
-  stones = []
-  let nummers = arrStones; 
-  let x = 0;
-  let y = 0;
-  let color = 'red';
-  let fcolor = 'gold'
-  let nr = 0;  
-  let stone = null
 
-  for (let i = 0; i < nummers.length; i++) {
-    nr = nummers[i];
-    let mod = i % COUNT;
-    x = mod * STONE_SIZE;    
-    if (mod === 0) {
-      x = 0;
-      y += STONE_SIZE;
-    }
-    color = nummers[i] % 2 === 0 ? 'red' : 'white';
-    if (nr === 16) {
+let savedStones = [];
+let currentStones = [];
+
+// Erstellt ein Array mit den Nummer und den Positionen
+// [{nr, x, y}]
+function readRecs(arrNumbers) {
+  savedStones = arrNumbers
+  let newArr = []  
+  let x = 0;
+  let y = 0;  
+  if (arrNumbers.length <= 0 || !arrNumbers) return
+  for (let index in arrNumbers) {
+    x = (index % 4 + 1) * STONE_SIZE
+    y += (index % 4 === 0) ? STONE_SIZE : 0
+    newArr.push([arrNumbers[index], x, y])
+  }  
+  currentStones = [...newArr]
+  return newArr
+}
+// Erstellt ein Array mit den Rechtecken zum Zeichnen
+// des Spielfeldes
+// arrStone = Objekt von readRecs
+function createStones(arrStones) { 
+  if (arrStones.length <= 0 || !arrStones) return
+ 
+  let color = 'red'; // Rechteckfarbe
+  let fcolor = 'gold' // Schriftfarbe 
+  let stone = null
+  const stones = []
+  for (let index in arrStones) {
+    color = arrStones[index][0] % 2 === 0 ? 'red' : 'white';
+    if (arrStones[index][0] === 16) {
       color = 'black';
       fcolor = 'black'
     } else {
       fcolor = 'gold'
     }
-    stone = new Rectangle(
-      x,
-      y - STONE_SIZE,
+    stone = new Stone(CTX,
+      arrStones[index][1] - 100,
+      arrStones[index][2] - 100,
       STONE_SIZE,
       STONE_SIZE,
       color,
-      nr,
-      i,
+      arrStones[index][0],
+      index,
       fcolor
     ) 
-    stones.push(stone);    
+    stones.push(stone)
+    // Spielfeld Zeichnen
+    
   }
-  drawStones(stones)
-  currentStones = copyStones(stones)  
   
+  return stones
 }
-
+ 
+initGame()
 // // Steine zeichnen
 function drawStones(arrStones) {
-  CTX.clearRect(0, 0, DISPLAY, DISPLAY); 
+  CTX.clearRect(0, 0, DISPLAY, DISPLAY);
   arrStones.forEach((r) => {
     r.draw()
   });
 }
-
-function copyStones(arrStones) {
-  const newArr = []  
-  for (let stone of arrStones) {     
-    newArr.push(new Rectangle(stone.x, stone.y, stone.w, stone.h, stone.color, stone.nr, stone.pos, stone.fontColor))
-  }
-  return newArr
+function initGame() {
+  savedStones = randomNr(COUNTSTONES)
+  const rdNumbers = readRecs(savedStones) 
+  const stones = createStones(rdNumbers)  
+  drawStones(stones)
 }
 
 function clearDisplay() {
   clicks = 0;
-  counter.innerText = 0;
-  stones = [];
-  recs = [];
+  counter.innerText = 0;  
   startTimer = false;
   clearTimeout(timerRef);
   clickTimer.innerText = '0 s';  
 }
 
-function kiResolve() {
-  clearDisplay();
-  let i = 0;
-  alert('Funktioniert noch nicht!')
+// Spiel ablauf
+function playing(mx, my) {
+  const arr = currentStones
+  const position = arr.findIndex(f => mx  < f[1] && my < f[2])
+  const index = arr.findIndex(f => f[0] === 16)
+  const nrPos = arr[position][0]
+  const nrInd = arr[index][0]
+ 
+  if (
+      position + 1 === index ||
+      position - 1 === index ||
+      position - 4 === index ||
+      position + 4 === index 
+      ) {
+          arr[index][0]= nrPos
+          arr[position][0] = nrInd
+      }
+  drawStones(createStones(arr))
+  counter.innerText = clicks;
+  infoGameOver(arr)
 }
 
-function playCheck(arrStones) {
-  let i = 1;  
-  let check = false
-  arrStones.forEach( s => {
-    check = s.pos + 1 === s.nr
-    if (!check) return
-  })
-  alert('bravo')
+function infoGameOver(arrStones) {
+  if (gameOver(arrStones)) {
+    info.innerText = 'Game over'
+    info.style.display = 'flex'
+    newSort.disabled = pause.disabled = resolve.disabled = newPlay.disabled = true
+  }
 }
-// Spiel ablauf
-readRecs(randomNr());
+function gameStart() {
+  pause.disabled = newPlay.disabled = false
+}
+function gameOver(arrStone) {
+  let game = false
+  for (let i in arrStone) {
+    if ( (i * 1) === arrStone[i][0] - 1) {
+      console.log(i)
+      if (i === '15'){
+        return true
+      }  
+    } else {      
+      break
+    }
+  }
+  return game;
+}
+function playPausing() {
+  if (pause.innerText === 'Pause') {   
+    stopTimer()
+    playPause = true
+    pause.innerText = 'Weiter'
+    info.innerText = "Pause"
+    info.style.display = 'flex'  
+  } else {
+      clTimer()
+      playPause = false
+      pause.innerText = 'Pause'
+      info.style.display = 'none'
+  }
+}
+
 window.addEventListener('resize', () => {  
   CTX.canvas.width = DISPLAY
   CTX.canvas.height = DISPLAY
 })
+
+// Spielsteine schieben
 CV.addEventListener('click', (e) => {
-  
+  if(playPause) return
+  gameStart()
+  clicks++
+  if (!timerRef)
+    clTimer()
   const mx = e.clientX - CV_RECT.left;
-  const my = e.clientY - CV_RECT.top;  
-  
-  if (startTimer) {
-    startTimer = false;
-    clTimer();
-  }
-  const nStones = JSON.parse(JSON.stringify(stones));
-  const posFree = nStones.find((f) => {
-    return f.color === 'black';
-  });
-
-  const posActive = nStones.find((f) => {
-    return mx - STONE_SIZE < f.x && my - STONE_SIZE < f.y;
-  });
-
-  let pF = posFree.pos;
-  let pA = posActive.pos;
- 
-  if (pA + 1 === pF || pA - 1 === pF || pA - 4 === pF || pA + 4 === pF) {   
-    clicks++;   
-    stones[pA].nr = nStones[pF].nr;
-    stones[pA].color = nStones[pF].color;
-    stones[pA].fontColor = nStones[pF].fontColor;
-    stones[pF].nr = nStones[pA].nr;
-    stones[pF].color = nStones[pA].color;
-    stones[pF].fontColor = nStones[pA].fontColor;
-    drawStones(stones)
-  }  
-
-  counter.innerText = clicks;
+  const my = e.clientY - CV_RECT.top; 
+  playing(mx, my)
 });
 
-newPlay.addEventListener('click', (e) => {
-  stones = copyStones(currentStones)
+newPlay.addEventListener('click', (e) => {   
+ 
+  const rdNumbers = readRecs(savedStones)
+  const stones = createStones(rdNumbers)
+  
   drawStones(stones)
+  // currentStones = [...savedStones]
 });
 newSort.addEventListener('click', (e) => {
- readRecs(createNummers())
+  const rdNr = readRecs(createNumbers(COUNTSTONES))
+  infoGameOver(rdNr)
+  drawStones(createStones(rdNr))
 });
 resolve.addEventListener('click', (e) => {  
     
 });
 mix.addEventListener('click', (e) => {
-  readRecs(randomNr())
+  initGame()  
+  info.style.display = 'none'
+  newSort.disabled = pause.disabled = resolve.disabled = newPlay.disabled = false
 })
 
 closeList.addEventListener('click', () => {
@@ -227,4 +231,8 @@ closeList.addEventListener('click', () => {
 })
 ranking.addEventListener('click', (e) => {
   dataList.style.display = 'flex'
+})
+pause.addEventListener('click', (e) => {
+  playPausing()
+  
 })

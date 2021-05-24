@@ -16,10 +16,11 @@
         <input id="pName" placeholder="Spielername">
       </div>
       <div class="play__button">
-        <button type="button" id="newPlay" class="btn">Neu Start</button>
+        <button type="button" id="newPlay" class="btn" disabled>Wiederholen</button>
+        <button type="button" id="pause" class="btn" disabled>Pause</button>
         <button type="button" id="newMix" class="btn">Mischen</button>
         <button type="button" id="newSort" class="btn">Sortieren</button>
-        <button type="button" id="resolve" class="btn">Lösen</button>
+        <button type="button" id="resolve" class="btn" disabled>Lösen</button>
         <button type="button" id="ranking" class="btn">Rangliste</button>
       </div>
       <div class="score">
@@ -35,6 +36,7 @@
     </div>
     <div class="border">
       <canvas id="canvas1"></canvas>
+      <div class="info">Pause</div>
     </div>
     <div class="scorelist" id="scoreList">
       
