@@ -11,11 +11,17 @@
       <h1>Zahlenschieber</h1>
     </header>
     <div class="player">
+      <div class="player__name">
+        <label for="pName">Spieler: </label>
+        <input id="pName" placeholder="Spielername">
+      </div>
       <div class="play__button">
-        <button type="button" id="newPlay" class="btn">Neu Start</button>
+        <button type="button" id="newPlay" class="btn" disabled>Wiederholen</button>
+        <button type="button" id="pause" class="btn" disabled>Pause</button>
         <button type="button" id="newMix" class="btn">Mischen</button>
         <button type="button" id="newSort" class="btn">Sortieren</button>
-        <button type="button" id="resolve" class="btn">Lösen</button>
+        <button type="button" id="resolve" class="btn" disabled>Lösen</button>
+        <button type="button" id="ranking" class="btn">Rangliste</button>
       </div>
       <div class="score">
         <div class="clickCounter">
@@ -30,8 +36,40 @@
     </div>
     <div class="border">
       <canvas id="canvas1"></canvas>
+      <div class="info">Pause</div>
     </div>
-    <div class="box"></div>
+    <div class="scorelist" id="scoreList">
+      
+      <div class="score__data">
+        <button id="closeScoreList" class="btn btn-close">X</button>
+      <table>
+        <tr>
+          <th>Rang</th>
+          <th>Name</th>
+          <th>Zeit</th>
+          <th>Klicks</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Lothar</td>
+          <td>123s</td>
+          <td>256</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Janina</td>
+          <td>245s</td>
+          <td>400</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Siegfried</td>
+          <td>178</td>
+          <td>560</td>
+        </tr>
+      </table>      
+    </div>
+    </div>
     <script src="src/index.js"></script>
   </body>
 </html>
