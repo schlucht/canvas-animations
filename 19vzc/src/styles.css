@@ -81,6 +81,13 @@ header h1 {
 .info .info__count {
   font-size: 2rem;
 }
+@media (max-width: 500px) {
+  .info {
+    height: 95%;
+    width: 95%;
+    font-size: 2rem;
+  }
+}
 .player {
   width: 80%;
   display: flex;
@@ -233,4 +240,25 @@ header h1 {
   background-color: transparent;
   border: none;
   color: wheat;
+}
+@media (max-width: 500px) {
+  .scorelist .scorelist__data {
+    font-size: 1rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .scorelist__data table th,
+  .scorelist__data table td {
+    font-size: 1.3rem;
+    padding: 0.5rem;
+  }
+  .scorelist__data table {
+    padding: 0.5rem;
+    margin: 1.5rem 0.5rem;
+  }
+  .scorelist__data .btn-close {
+    top: 2px;
+    right: 2px;
+  }
 }
