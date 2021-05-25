@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Parcel Sandbox</title>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="src/styles.css" />
-  </head>
 
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Farro:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css" />
+    <title>Jagolo</title>
+  </head> 
   <body>
     <header>
       <h1>Zahlenschieber</h1>
@@ -16,12 +21,12 @@
         <input id="pName" placeholder="Spielername">
       </div>
       <div class="play__button">
-        <button type="button" id="newPlay" class="btn" disabled>Wiederholen</button>
-        <button type="button" id="pause" class="btn" disabled>Pause</button>
-        <button type="button" id="newMix" class="btn">Mischen</button>
-        <button type="button" id="newSort" class="btn">Sortieren</button>
-        <button type="button" id="resolve" class="btn" disabled>Lösen</button>
-        <button type="button" id="ranking" class="btn">Rangliste</button>
+        <button type="button" id="newPlay" class="btn" disabled><i class="fas fa-reply-all"></i>Wiederholen</button>
+        <button type="button" id="pause" class="btn" disabled><i class="far fa-pause-circle"></i>Pause</button>
+        <button type="button" id="newMix" class="btn"><i class="far fa-play-circle"></i>Mischen</button>
+        <button type="button" id="newSort" class="btn"><i class="fas fa-sort-numeric-down"></i>Sortieren</button>
+        <button type="button" id="resolve" class="btn" disabled><i class="far fa-calendar-alt"></i>Lösen</button>
+        <button type="button" id="ranking" class="btn"><i class="fas fa-table"></i>Rangliste</button>
       </div>
       <div class="score">
         <div class="clickCounter">
@@ -40,34 +45,21 @@
     </div>
     <div class="scorelist" id="scoreList">
       
-      <div class="score__data">
+      <div class="scorelist__data">
         <button id="closeScoreList" class="btn btn-close">X</button>
-      <table>
-        <tr>
-          <th>Rang</th>
-          <th>Name</th>
-          <th>Zeit</th>
-          <th>Klicks</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Lothar</td>
-          <td>123s</td>
-          <td>256</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Janina</td>
-          <td>245s</td>
-          <td>400</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Siegfried</td>
-          <td>178</td>
-          <td>560</td>
-        </tr>
-      </table>      
+        <table id ="tableData">
+          <thead>
+            <tr>
+              <th>Rang</th>
+              <th>Name</th>
+              <th>Zeit</th>
+              <th>Klicks</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>          
+        </table>      
     </div>
     </div>
     <script src="src/index.js"></script>
